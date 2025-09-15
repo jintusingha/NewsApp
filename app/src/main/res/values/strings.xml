@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">NewsApp</string>
+    <string name="latest_news">Latest News</string>
+    <string name="loading_news">Loading news…</string>
+    <string name="something_went_wrong">Something went wrong</string>
+    <string name="read_more">Read more →</string>
+    <string name="article_image_desc">Article image</string>
+    <string name="warning_emoji">⚠️</string>
+    <string name="greeting_hello">Hello! 👋</string>
+    <string name="bookmarks_desc">Bookmarks</string>
+    <string name="search_desc">Search</string>
+    <string name="search_placeholder">Search breaking news…</string>
+    <string name="article_count">%1$d articles</string>
+    <string name="trending_badge">🔥 Trending</string>
+</resources>
