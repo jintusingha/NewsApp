@@ -1,3 +1,4 @@
+import android.content.Intent
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.compose.foundation.layout.Box
@@ -11,6 +12,7 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Bookmark
 import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -25,6 +27,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
@@ -40,6 +43,15 @@ fun NewsDetailScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val articleUrl = viewModel.articleUrl
+
+    val context = LocalContext.current
+
+    val article = if (uiState is DetailViewModel.DetailUiState.Success) {
+        (uiState as DetailViewModel.DetailUiState.Success).article
+    } else {
+        null
+    }
+
 
     Column(modifier = Modifier.fillMaxSize()) {
         TopAppBar(
@@ -119,6 +131,25 @@ fun NewsDetailScreen(
                     .align(Alignment.BottomEnd)
             ) {
                 Icon(Icons.Default.Bookmark, contentDescription = "Bookmark")
+            }
+            FloatingActionButton(
+                onClick = {
+                    article?.let {
+                        val shareText = "${it.title}\n\nRead more here: ${viewModel.articleUrl}"
+                        val shareIntent = Intent().apply {
+                            action = Intent.ACTION_SEND
+                            putExtra(Intent.EXTRA_TEXT, shareText)
+                            type = "text/plain"
+                        }
+                        val chooser = Intent.createChooser(shareIntent, "Share news via")
+                        context.startActivity(chooser)
+                    }
+                },
+                modifier = Modifier
+                    .padding(16.dp)
+                    .align(Alignment.BottomStart)
+            ) {
+                Icon(Icons.Default.Share, contentDescription = "Share")
             }
         }
     }
