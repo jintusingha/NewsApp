@@ -1,6 +1,6 @@
 package com.jintu.news_app.presentation.model
 
-data class NewsArticleUiModel(
+data class  NewsArticleUiModel(
 
     val title:String,
     val description:String,

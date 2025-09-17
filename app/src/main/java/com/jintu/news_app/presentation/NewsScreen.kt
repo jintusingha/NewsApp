@@ -1,6 +1,8 @@
 package com.jintu.news_app.presentation
 
+import android.R.attr.fontWeight
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -18,6 +20,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
@@ -25,12 +29,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.jintu.news_app.R
 import com.jintu.news_app.presentation.model.NewsArticleUiModel
+import com.jintu.news_app.ui.theme.News_AppTheme
 import java.net.URLEncoder
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -56,19 +62,14 @@ fun NewsScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(
-                Brush.verticalGradient(
-                    colors = listOf(
-                        MaterialTheme.colorScheme.surface,
-                        MaterialTheme.colorScheme.background
-                    )
-                )
+            .background(MaterialTheme.colorScheme.surface
+
             )
     ) {
 
         Surface(
             modifier = Modifier.fillMaxWidth(),
-            color = MaterialTheme.colorScheme.primary,
+            color = MaterialTheme.colorScheme.surface,
             shadowElevation = dimensionResource(R.dimen.elevation_medium)
         ) {
             Column(
@@ -86,28 +87,27 @@ fun NewsScreen(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.Top
                 ) {
+
                     Column {
-                        Text(
-                            text = stringResource(R.string.greeting_hello),
-                            style = MaterialTheme.typography.bodyLarge,
-                            color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.8f),
-                            fontWeight = FontWeight.Normal
-                        )
-                        Spacer(modifier = Modifier.height(dimensionResource(R.dimen.spacing_extra_small)))
+
                         Text(
                             text = stringResource(R.string.app_name),
                             style = MaterialTheme.typography.headlineLarge,
-                            color = MaterialTheme.colorScheme.onPrimary,
+                            color = MaterialTheme.colorScheme.onSurface ,
                             fontWeight = FontWeight.Bold
                         )
                     }
 
-                    Surface(
+
+                    Card(
                         modifier = Modifier
                             .size(dimensionResource(R.dimen.icon_size_large))
                             .clickable { navController.navigate("bookmarks") },
-                        shape = CircleShape,
-                        color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.15f)
+                        shape = RoundedCornerShape(dimensionResource(R.dimen.corner_radius_large)),
+                        colors = CardDefaults.cardColors(
+                            containerColor = MaterialTheme.colorScheme.surface
+                        ),
+                        elevation = CardDefaults.cardElevation(defaultElevation = dimensionResource(R.dimen.elevation_small))
                     ) {
                         Box(
                             modifier = Modifier.fillMaxSize(),
@@ -116,7 +116,7 @@ fun NewsScreen(
                             Icon(
                                 imageVector = Icons.Outlined.BookmarkBorder,
                                 contentDescription = stringResource(R.string.bookmarks_desc),
-                                tint = MaterialTheme.colorScheme.onPrimary,
+                                tint = MaterialTheme.colorScheme.onSurface,
                                 modifier = Modifier.size(dimensionResource(R.dimen.icon_size_small))
                             )
                         }
@@ -126,8 +126,15 @@ fun NewsScreen(
                 Spacer(modifier = Modifier.height(dimensionResource(R.dimen.spacing_extra_large)))
 
                 Card(
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(dimensionResource(R.dimen.corner_radius_large)),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = dimensionResource(R.dimen.padding_medium))
+                        .border(
+                            width = 1.dp,
+                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.12f),
+                            shape = RectangleShape
+                        ),
+                    shape = RectangleShape,
                     colors = CardDefaults.cardColors(
                         containerColor = MaterialTheme.colorScheme.surface
                     ),
@@ -136,29 +143,20 @@ fun NewsScreen(
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(dimensionResource(R.dimen.padding_extra_large)),
+                            .padding(horizontal = dimensionResource(R.dimen.padding_large), vertical = dimensionResource(R.dimen.padding_medium)),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Surface(
-                            modifier = Modifier.size(dimensionResource(R.dimen.icon_size_extra_large)),
-                            shape = CircleShape,
-                            color = MaterialTheme.colorScheme.primary
-                        ) {
-                            Box(
-                                modifier = Modifier.fillMaxSize(),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Default.Search,
-                                    contentDescription = stringResource(R.string.search_desc),
-                                    tint = MaterialTheme.colorScheme.onPrimary,
-                                    modifier = Modifier.size(dimensionResource(R.dimen.icon_size_medium))
-                                )
-                            }
-                        }
+                        // Search Icon
+                        Icon(
+                            imageVector = Icons.Default.Search,
+                            contentDescription = stringResource(R.string.search_desc),
+                            tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.8f),
+                            modifier = Modifier.size(dimensionResource(R.dimen.icon_size_medium))
+                        )
 
                         Spacer(modifier = Modifier.width(dimensionResource(R.dimen.spacing_medium)))
 
+                        // TextField
                         BasicTextField(
                             value = searchQuery,
                             onValueChange = { searchQuery = it },
@@ -233,25 +231,16 @@ fun NewsScreen(
                         ) {
                             Text(
                                 text = stringResource(R.string.latest_news),
-                                style = MaterialTheme.typography.titleLarge,
+                                style = MaterialTheme.typography.titleLarge.copy(fontSize = 20.sp),
                                 fontWeight = FontWeight.Bold,
                                 color = MaterialTheme.colorScheme.onBackground
                             )
-                            Surface(
-                                shape = RoundedCornerShape(dimensionResource(R.dimen.corner_radius_medium)),
-                                color = MaterialTheme.colorScheme.primaryContainer
-                            ) {
-                                Text(
-                                    text = stringResource(R.string.article_count, state.news.size),
-                                    modifier = Modifier.padding(
-                                        horizontal = dimensionResource(R.dimen.padding_medium),
-                                        vertical = dimensionResource(R.dimen.padding_small)
-                                    ),
-                                    style = MaterialTheme.typography.labelMedium,
-                                    color = MaterialTheme.colorScheme.onPrimaryContainer,
-                                    fontWeight = FontWeight.Medium
-                                )
-                            }
+                            Text(
+                                text = "see all",
+                                style = MaterialTheme.typography.labelSmall.copy(fontSize = 12.sp),
+                                color = MaterialTheme.colorScheme.onBackground
+                            )
+
                         }
                     }
 
@@ -419,4 +408,27 @@ fun NewsArticleItem(
             }
         }
     }
+}
+
+@Preview(showSystemUi = true)
+@Composable
+fun NewsArticleItemPreview() {
+
+
+
+        val sampleArticle = NewsArticleUiModel(
+            title = "This is a Sample News Headline",
+            description = "This is a short but descriptive summary of the news article. It's meant to show how the UI will look with a proper description.",
+            imageUrl = "https://source.unsplash.com/random/800x600",
+            url = "https://www.example.com",
+            isBookmarked = false
+        )
+        News_AppTheme {
+            NewsArticleItem(
+                article = sampleArticle,
+                onItemClick = { }
+            )
+
+        }
+
 }

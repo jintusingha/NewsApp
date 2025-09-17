@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.jintu.news_app.presentation.AppNavHost
+import com.jintu.news_app.presentation.NewsArticleItem
 import com.jintu.news_app.presentation.NewsScreen
 import com.jintu.news_app.ui.theme.News_AppTheme
 import dagger.hilt.android.AndroidEntryPoint

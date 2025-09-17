@@ -22,7 +22,7 @@
         <dimen name="image_height">200dp</dimen>
         <dimen name="icon_size_small">24dp</dimen>
         <dimen name="icon_size_medium">22dp</dimen>
-        <dimen name="icon_size_large">50dp</dimen>
+        <dimen name="icon_size_large">40dp</dimen>
         <dimen name="icon_size_extra_large">44dp</dimen>
 
         <dimen name="progress_size">48dp</dimen>
