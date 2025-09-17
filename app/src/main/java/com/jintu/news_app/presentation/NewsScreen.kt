@@ -67,11 +67,7 @@ fun NewsScreen(
             )
     ) {
 
-        Surface(
-            modifier = Modifier.fillMaxWidth(),
-            color = MaterialTheme.colorScheme.surface,
-            shadowElevation = dimensionResource(R.dimen.elevation_medium)
-        ) {
+
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -146,7 +142,7 @@ fun NewsScreen(
                             .padding(horizontal = dimensionResource(R.dimen.padding_large), vertical = dimensionResource(R.dimen.padding_medium)),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        // Search Icon
+
                         Icon(
                             imageVector = Icons.Default.Search,
                             contentDescription = stringResource(R.string.search_desc),
@@ -156,7 +152,7 @@ fun NewsScreen(
 
                         Spacer(modifier = Modifier.width(dimensionResource(R.dimen.spacing_medium)))
 
-                        // TextField
+
                         BasicTextField(
                             value = searchQuery,
                             onValueChange = { searchQuery = it },
@@ -178,7 +174,7 @@ fun NewsScreen(
                         )
                     }
                 }
-            }
+
         }
 
         when (val state = uiState) {
@@ -308,101 +304,62 @@ fun NewsArticleItem(
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(dimensionResource(R.dimen.corner_radius_large)))
+            .clip(RoundedCornerShape(12.dp))
             .clickable { onItemClick(article) },
-        elevation = CardDefaults.cardElevation(defaultElevation = dimensionResource(R.dimen.elevation_small)),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surface
         ),
-        shape = RoundedCornerShape(dimensionResource(R.dimen.corner_radius_large))
+        shape = RoundedCornerShape(12.dp)
     ) {
-        Column(
+        Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(dimensionResource(R.dimen.padding_extra_large))
+                .padding(12.dp),
+            verticalAlignment = Alignment.Top
         ) {
 
-            Card(
+            AsyncImage(
+                model = article.imageUrl,
+                contentDescription = stringResource(R.string.article_image_desc),
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .height(dimensionResource(R.dimen.image_height)),
-                shape = RoundedCornerShape(dimensionResource(R.dimen.corner_radius_medium)),
-                colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.surfaceVariant
+                    .size(width = 80.dp, height = 80.dp)
+                    .clip(RoundedCornerShape(8.dp)),
+                contentScale = ContentScale.Crop,
+                error = androidx.compose.ui.graphics.painter.ColorPainter(
+                    MaterialTheme.colorScheme.surfaceVariant
                 )
-            ) {
-                AsyncImage(
-                    model = article.imageUrl,
-                    contentDescription = stringResource(R.string.article_image_desc),
-                    modifier = Modifier.fillMaxSize(),
-                    contentScale = ContentScale.Crop,
-                    error = androidx.compose.ui.graphics.painter.ColorPainter(
-                        MaterialTheme.colorScheme.surfaceVariant
-                    )
-                )
-            }
-
-            Spacer(modifier = Modifier.height(dimensionResource(R.dimen.spacing_extra_large)))
-
-            Text(
-                text = article.title,
-                style = MaterialTheme.typography.titleLarge,
-                fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.onSurface,
-                maxLines = 2,
-                overflow = TextOverflow.Ellipsis,
-                lineHeight = dimensionResource(R.dimen.line_height_large).value.sp
             )
 
-            Spacer(modifier = Modifier.height(dimensionResource(R.dimen.spacing_medium)))
-
-            Text(
-                text = article.description,
-                style = MaterialTheme.typography.bodyLarge,
-                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
-                maxLines = 3,
-                overflow = TextOverflow.Ellipsis,
-                lineHeight = dimensionResource(R.dimen.line_height_medium).value.sp
-            )
+            Spacer(modifier = Modifier.width(12.dp))
 
 
-            Spacer(modifier = Modifier.height(dimensionResource(R.dimen.spacing_extra_large)))
-
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxHeight(),
+                verticalArrangement = Arrangement.spacedBy(6.dp)
             ) {
-                Surface(
-                    shape = RoundedCornerShape(dimensionResource(R.dimen.corner_radius_medium)),
-                    color = MaterialTheme.colorScheme.secondaryContainer
-                ) {
-                    Text(
-                        text = stringResource(R.string.trending_badge),
-                        modifier = Modifier.padding(
-                            horizontal = dimensionResource(R.dimen.padding_large),
-                            vertical = dimensionResource(R.dimen.padding_medium)
-                        ),
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSecondaryContainer,
-                        fontWeight = FontWeight.Medium
-                    )
-                }
 
-                Surface(
-                    shape = RoundedCornerShape(dimensionResource(R.dimen.corner_radius_small)),
-                    color = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.clickable { onItemClick(article) }
-                ) {
+                Text(
+                    text = article.title,
+                    style = MaterialTheme.typography.bodyLarge.copy(
+                        fontWeight = FontWeight.SemiBold,
+                        lineHeight = 20.sp
+                    ),
+                    color = MaterialTheme.colorScheme.onSurface,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis
+                )
+
+
+                if (!article.description.isNullOrBlank()) {
                     Text(
-                        text = stringResource(R.string.read_more),
-                        modifier = Modifier.padding(
-                            horizontal = dimensionResource(R.dimen.padding_extra_large),
-                            vertical = dimensionResource(R.dimen.padding_medium)
-                        ),
-                        style = MaterialTheme.typography.titleMedium,
-                        color = MaterialTheme.colorScheme.onPrimary,
-                        fontWeight = FontWeight.SemiBold
+                        text = article.description,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis
                     )
                 }
             }
@@ -410,25 +367,3 @@ fun NewsArticleItem(
     }
 }
 
-@Preview(showSystemUi = true)
-@Composable
-fun NewsArticleItemPreview() {
-
-
-
-        val sampleArticle = NewsArticleUiModel(
-            title = "This is a Sample News Headline",
-            description = "This is a short but descriptive summary of the news article. It's meant to show how the UI will look with a proper description.",
-            imageUrl = "https://source.unsplash.com/random/800x600",
-            url = "https://www.example.com",
-            isBookmarked = false
-        )
-        News_AppTheme {
-            NewsArticleItem(
-                article = sampleArticle,
-                onItemClick = { }
-            )
-
-        }
-
-}

@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowBack
@@ -17,6 +18,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -124,14 +126,29 @@ fun NewsDetailScreen(
                 }
             }
 
+
             FloatingActionButton(
                 onClick = { viewModel.onBookmarkClicked() },
                 modifier = Modifier
                     .padding(16.dp)
                     .align(Alignment.BottomEnd)
+                    .size(48.dp),
+                containerColor = MaterialTheme.colorScheme.surface,
+                contentColor = MaterialTheme.colorScheme.onSurface,
+                elevation = FloatingActionButtonDefaults.elevation(
+                    defaultElevation = 6.dp,
+                    pressedElevation = 8.dp
+                )
             ) {
-                Icon(Icons.Default.Bookmark, contentDescription = "Bookmark")
+                Icon(
+                    imageVector = Icons.Default.Bookmark,
+                    contentDescription = "Bookmark",
+                    modifier = Modifier.size(20.dp),
+                    tint = MaterialTheme.colorScheme.primary
+                )
             }
+
+
             FloatingActionButton(
                 onClick = {
                     article?.let {
@@ -148,8 +165,20 @@ fun NewsDetailScreen(
                 modifier = Modifier
                     .padding(16.dp)
                     .align(Alignment.BottomStart)
+                    .size(48.dp),
+                containerColor = MaterialTheme.colorScheme.surface,
+                contentColor = MaterialTheme.colorScheme.onSurface,
+                elevation = FloatingActionButtonDefaults.elevation(
+                    defaultElevation = 6.dp,
+                    pressedElevation = 8.dp
+                )
             ) {
-                Icon(Icons.Default.Share, contentDescription = "Share")
+                Icon(
+                    imageVector = Icons.Default.Share,
+                    contentDescription = "Share",
+                    modifier = Modifier.size(20.dp),
+                    tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.8f)
+                )
             }
         }
     }
