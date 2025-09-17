@@ -3,6 +3,7 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
@@ -12,6 +13,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Bookmark
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.Button
@@ -37,6 +39,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.jintu.news_app.presentation.DetailUiState
 import com.jintu.news_app.presentation.DetailViewModel
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NewsDetailScreen(
@@ -54,7 +57,6 @@ fun NewsDetailScreen(
         null
     }
 
-
     Column(modifier = Modifier.fillMaxSize()) {
         TopAppBar(
             title = { Text("Article Detail", fontWeight = FontWeight.Bold) },
@@ -64,14 +66,37 @@ fun NewsDetailScreen(
                 }
             },
             actions = {
+
+                IconButton(
+                    onClick = {
+                        article?.let {
+                            val shareText = "${it.title}\n\nRead more here: ${viewModel.articleUrl}"
+                            val shareIntent = Intent().apply {
+                                action = Intent.ACTION_SEND
+                                putExtra(Intent.EXTRA_TEXT, shareText)
+                                type = "text/plain"
+                            }
+                            val chooser = Intent.createChooser(shareIntent, "Share news via")
+                            context.startActivity(chooser)
+                        }
+                    }
+                ) {
+                    Icon(imageVector = Icons.Default.Share, contentDescription = "Share")
+                }
+
+
                 IconButton(onClick = { viewModel.onRefreshClicked() }) {
                     Icon(imageVector = Icons.Default.Refresh, contentDescription = "Refresh")
+                }
+
+
+                IconButton(onClick = {  }) {
+                    Icon(imageVector = Icons.Default.MoreVert, contentDescription = "More options")
                 }
             }
         )
 
         Box(modifier = Modifier.fillMaxSize()) {
-
             AndroidView(
                 factory = { context ->
                     WebView(context).apply {
@@ -106,7 +131,7 @@ fun NewsDetailScreen(
                 }
                 is DetailViewModel.DetailUiState.Error -> {
                     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Column(horizontalAlignment = Alignment.CenterVertically as Alignment.Horizontal) {
                             Text(
                                 text = "Failed to load article",
                                 style = MaterialTheme.typography.headlineSmall,
@@ -145,39 +170,6 @@ fun NewsDetailScreen(
                     contentDescription = "Bookmark",
                     modifier = Modifier.size(20.dp),
                     tint = MaterialTheme.colorScheme.primary
-                )
-            }
-
-
-            FloatingActionButton(
-                onClick = {
-                    article?.let {
-                        val shareText = "${it.title}\n\nRead more here: ${viewModel.articleUrl}"
-                        val shareIntent = Intent().apply {
-                            action = Intent.ACTION_SEND
-                            putExtra(Intent.EXTRA_TEXT, shareText)
-                            type = "text/plain"
-                        }
-                        val chooser = Intent.createChooser(shareIntent, "Share news via")
-                        context.startActivity(chooser)
-                    }
-                },
-                modifier = Modifier
-                    .padding(16.dp)
-                    .align(Alignment.BottomStart)
-                    .size(48.dp),
-                containerColor = MaterialTheme.colorScheme.surface,
-                contentColor = MaterialTheme.colorScheme.onSurface,
-                elevation = FloatingActionButtonDefaults.elevation(
-                    defaultElevation = 6.dp,
-                    pressedElevation = 8.dp
-                )
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Share,
-                    contentDescription = "Share",
-                    modifier = Modifier.size(20.dp),
-                    tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.8f)
                 )
             }
         }
